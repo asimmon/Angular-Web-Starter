@@ -21,5 +21,11 @@
                     controller: 'HomeCtrl',
                     controllerAs: 'vm'
                 });
+        })
+        .run(function ($rootScope, $uibModalStack, $log) {
+            $rootScope.$on('$stateChangeStart', function (event, toState) {
+                $uibModalStack.dismissAll();
+                $log.log('Navigating to state ' + toState.name);
+            });
         });
 })();

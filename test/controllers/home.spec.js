@@ -5,10 +5,10 @@ describe('HomeCtrl', function () {
 
     beforeEach(module('myapp'));
     beforeEach(inject(function ($controller) {
-        ctrl = $controller('ProfileCtrl');
+        ctrl = $controller('HomeCtrl');
     }));
 
-    it('controller should load without errors', function () {
+    it('HomeCtrl should load without errors', function () {
         expect(true).toBe(true);
     });
 });

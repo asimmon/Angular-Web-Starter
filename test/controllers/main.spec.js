@@ -1,14 +1,14 @@
 'use strict';
 
-describe('HomeCtrl', function () {
+describe('MainCtrl', function () {
     var ctrl;
 
     beforeEach(module('myapp'));
     beforeEach(inject(function ($controller) {
-        ctrl = $controller('HomeCtrl');
+        ctrl = $controller('MainCtrl');
     }));
 
-    it('HomeCtrl should load without errors', function () {
+    it('MainCtrl should load without errors', function () {
         expect(true).toBe(true);
     });
 });

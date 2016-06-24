@@ -1,14 +1,16 @@
 'use strict';
 
-describe('TermAppWS', function () {
-    var ws;
+describe('AppSvc', function () {
+    var svc;
 
     beforeEach(module('myapp'));
-    beforeEach(inject(function (TermAppWS) {
-        ws = TermAppWS;
+    beforeEach(inject(function (AppSvc) {
+        svc = AppSvc;
     }));
 
-    it('factory should load without errors', function () {
-        expect(true).toBe(true);
+    it('AppSvc say hello to Mike', function () {
+        var actual = svc.sayHello('Mike');
+        var expected = 'Hello, Mike';
+        expect(actual).toBe(expected);
     });
 });

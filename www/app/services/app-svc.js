@@ -4,6 +4,17 @@
     angular.module('myapp').service('AppSvc', function () {
         'ngInject';
 
-        return {};
+        /**
+         * Say hello to someone
+         * @param text
+         * @returns {string}
+         */
+        var sayHello = function (text) {
+            return 'Hello, ' + text;
+        };
+
+        return {
+            sayHello: sayHello
+        };
     });
 })();
