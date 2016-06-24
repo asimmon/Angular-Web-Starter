@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Mon application</title>
+    <link rel="icon" href="favicon.ico">
+
+    <!-- build:css css/vendor.min.css -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- endbuild -->
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- build:css css/app.min.css -->
+    <link href="css/app.min.css" rel="stylesheet"/>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/ie.min.js -->
+    <!--[if lt IE 9]>
+    <script src="lib/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="lib/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+</head>
+<body ng-app="myapp">
+
+<div ui-view></div>
+
+<!-- build:js scripts/vendor.min.js -->
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script src="lib/lodash/dist/lodash.min.js"></script>
+<script src="lib/angular/angular.min.js"></script>
+<script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<!-- endbuild -->
+
+<!-- build:js app/app.min.js -->
+<script src="app/app.js"></script>
+<script src="app/controllers/main-ctrl.js"></script>
+<script src="app/controllers/home-ctrl.js"></script>
+<script src="app/services/app-svc.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>
