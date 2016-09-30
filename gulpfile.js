@@ -25,17 +25,17 @@ var paths = {
  * Compile SCSS files to www/css/*.css
  */
 gulp.task('sass', function () {
-    return gulp.src('./scss/app.scss')
+    return gulp.src('scss/app.scss')
         .pipe($.sass().on('error', $.sass.logError))
         .pipe($.autoprefixer({
             browsers: ['> 1%', 'last 2 versions', 'ie 8', 'ie 9']
         }))
-        .pipe(gulp.dest('./www/css/'))
+        .pipe(gulp.dest('www/css/'))
         .pipe($.cleanCss({
             keepSpecialComments: 0
         }))
         .pipe($.rename({extname: '.min.css'}))
-        .pipe(gulp.dest('./www/css/'))
+        .pipe(gulp.dest('www/css/'))
         .pipe(browserSync.stream());
 });
 
@@ -55,7 +55,7 @@ gulp.task('jshint', function () {
  */
 gulp.task('serve', ['jshint', 'sass'], function () {
     browserSync.init({
-        server: "./www"
+        server: 'www'
     });
 
     var notifyFileChanged = function (event) {
@@ -83,7 +83,7 @@ gulp.task('serve', ['jshint', 'sass'], function () {
  */
 gulp.task('serve:dist', ['build'], function () {
     browserSync.init({
-        server: './build/dist'
+        server: 'build/dist'
     });
 });
 
@@ -152,6 +152,7 @@ gulp.task('build:src', ['build:html', 'jshint', 'sass'], function () {
     var jsFilter = $.filter('**/*.js', {restore: true});
     var cssFilter = $.filter('**/*.css', {restore: true});
     var htmlFilter = $.filter('**/*.html', {restore: true});
+    var indexHtmlFilter = $.filter(['**/*', '!' + paths.html.main], { restore: true });
 
     return gulp.src(paths.html.main)
         .pipe($.useref({searchPath: ['www']}))
@@ -168,6 +169,10 @@ gulp.task('build:src', ['build:html', 'jshint', 'sass'], function () {
         .pipe(htmlFilter)
         .pipe($.htmlmin({collapseWhitespace: true}))
         .pipe(htmlFilter.restore)
+        .pipe(indexHtmlFilter)
+        .pipe($.rev())
+        .pipe(indexHtmlFilter.restore)
+        .pipe($.revReplace())
         .pipe(gulp.dest('build/dist'));
 });
 
