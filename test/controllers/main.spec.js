@@ -9,6 +9,6 @@ describe('MainCtrl', function () {
     }));
 
     it('MainCtrl should load without errors', function () {
-        expect(true).toBe(true);
+        expect(ctrl).toBeDefined();
     });
 });

@@ -9,6 +9,6 @@ describe('HomeCtrl', function () {
     }));
 
     it('HomeCtrl should load without errors', function () {
-        expect(true).toBe(true);
+        expect(ctrl).toBeDefined();
     });
 });
