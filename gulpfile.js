@@ -179,11 +179,11 @@ gulp.task('build:src', ['build:html', 'jshint', 'sass'], function () {
 /**
  * Launch all the build tasks
  */
-gulp.task('build', ['build:clean'], function () {
+gulp.task('build', ['build:clean'], function (callback) {
     runSequence([
         'build:images',
         'build:extras',
         'build:fonts',
         'build:src'
-    ]);
+    ], callback);
 });
