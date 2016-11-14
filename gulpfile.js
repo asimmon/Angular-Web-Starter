@@ -55,7 +55,8 @@ gulp.task('jshint', function () {
  */
 gulp.task('serve', ['jshint', 'sass'], function () {
     browserSync.init({
-        server: 'www'
+        server: 'www',
+        open: false
     });
 
     var notifyFileChanged = function (event) {
@@ -83,7 +84,8 @@ gulp.task('serve', ['jshint', 'sass'], function () {
  */
 gulp.task('serve:dist', ['build'], function () {
     browserSync.init({
-        server: 'build/dist'
+        server: 'build/dist',
+        open: false
     });
 });
 
