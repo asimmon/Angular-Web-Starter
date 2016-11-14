@@ -28,7 +28,9 @@ module.exports = function (config) {
         coverageReporter: {
             dir: 'build/coverage/',
             reporters: [
-                {type: 'html', subdir: 'html'}
+                {type: 'html', subdir: 'html'},
+                {type: 'teamcity', subdir: '.'},
+                {type: 'text', subdir: '.', file : 'coverage.txt'}
             ]
         }
     })
