@@ -15,13 +15,14 @@ module.exports = function (config) {
             'www/app/**/*.js': ['coverage']
         },
         exclude: [],
-        reporters: ['progress', 'coverage'],
+        reporters: ['teamcity', 'coverage'],
         port: 9876,
         browsers: ['PhantomJS'],
         plugins: [
             'karma-phantomjs-launcher',
             'karma-jasmine',
-            'karma-coverage'
+            'karma-coverage',
+            'karma-teamcity-reporter'
         ],
         singleRun: true,
         coverageReporter: {
