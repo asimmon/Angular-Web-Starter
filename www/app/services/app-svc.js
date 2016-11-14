@@ -6,11 +6,11 @@
 
         /**
          * Say hello to someone
-         * @param text
+         * @param name
          * @returns {string}
          */
-        var sayHello = function (text) {
-            return 'Hello, ' + text;
+        var sayHello = function (name) {
+            return 'Hello, ' + name;
         };
 
         return {
