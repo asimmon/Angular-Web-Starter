@@ -1,13 +1,7 @@
 'use strict';
 
 var gulp = require('gulp'),
-    path = require('path'),
-    merge = require('merge-stream'),
-    $ = require('gulp-load-plugins')({
-        rename: {
-            'gulp-angular-templatecache': 'templateCache'
-        }
-    }),
+    $ = require('gulp-load-plugins')(),
     rimraf = require('rimraf'),
     runSequence = require('run-sequence'),
     browserSync = require('browser-sync').create();
@@ -117,15 +111,6 @@ gulp.task('build:clean', function (done) {
 });
 
 /**
- * Move angular views to the distribution folder
- */
-gulp.task('build:html', function () {
-    return gulp.src(paths.html.files)
-        .pipe($.htmlmin({collapseWhitespace: true}))
-        .pipe(gulp.dest('build/dist/app/views'));
-});
-
-/**
  * Move images to the distribution folder
  */
 gulp.task('build:images', function () {
@@ -164,9 +149,9 @@ gulp.task('build:src', ['jshint', 'sass'], function () {
     var htmlFilter = $.filter('**/*.html', {restore: true});
     var indexHtmlFilter = $.filter(['**/*', '!' + paths.html.main], { restore: true });
 
-    var viewsStream = gulp.src([paths.html.files], {base: './www'})
+    var templatesStream = gulp.src([paths.html.files], {base: './www'})
         .pipe($.htmlmin({collapseWhitespace: true}))
-        .pipe($.templateCache({
+        .pipe($.angularTemplatecache({
             module: 'myapp',
             standalone: false,
             base: function(file) {
@@ -176,7 +161,7 @@ gulp.task('build:src', ['jshint', 'sass'], function () {
         .pipe(gulp.dest('build/temp'));
 
     return gulp.src(paths.html.main)
-        .pipe($.inject(viewsStream, {relative: true}))
+        .pipe($.inject(templatesStream, {relative: true}))
         .pipe($.replace(/<!-- (inject:js|endinject) -->/g, ''))
         .pipe($.useref({
             searchPath: ['www', 'build/temp']
@@ -192,7 +177,7 @@ gulp.task('build:src', ['jshint', 'sass'], function () {
         }))
         .pipe(cssFilter.restore)
         .pipe(htmlFilter)
-        //.pipe($.htmlmin({collapseWhitespace: true}))
+        .pipe($.htmlmin({collapseWhitespace: true}))
         .pipe(htmlFilter.restore)
         .pipe(indexHtmlFilter)
         .pipe($.rev())
