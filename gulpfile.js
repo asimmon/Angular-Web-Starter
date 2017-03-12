@@ -1,7 +1,13 @@
 'use strict';
 
 var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
+    path = require('path'),
+    merge = require('merge-stream'),
+    $ = require('gulp-load-plugins')({
+        rename: {
+            'gulp-angular-templatecache': 'templateCache'
+        }
+    }),
     rimraf = require('rimraf'),
     runSequence = require('run-sequence'),
     browserSync = require('browser-sync').create();
@@ -13,7 +19,7 @@ var paths = {
     images: 'www/img/**/*',
     html: {
         main: 'www/index.html',
-        files: 'www/app/views/**/*'
+        files: 'www/app/views/**/*.html'
     },
     fonts: [
         'www/lib/bootstrap/fonts/**/*',
@@ -104,8 +110,10 @@ gulp.task('default', ['serve']);
 /**
  * Delete the build and build/dist folder
  */
-gulp.task('build:clean', function (cb) {
-    rimraf('build/dist', cb);
+gulp.task('build:clean', function (done) {
+    rimraf('build/dist', function() {
+        rimraf('build/temp', done);
+    });
 });
 
 /**
@@ -150,14 +158,29 @@ gulp.task('build:fonts', function () {
 /**
  * Minify, concatenate and move CSS / JS files to the distribution folder
  */
-gulp.task('build:src', ['build:html', 'jshint', 'sass'], function () {
+gulp.task('build:src', ['jshint', 'sass'], function () {
     var jsFilter = $.filter('**/*.js', {restore: true});
     var cssFilter = $.filter('**/*.css', {restore: true});
     var htmlFilter = $.filter('**/*.html', {restore: true});
     var indexHtmlFilter = $.filter(['**/*', '!' + paths.html.main], { restore: true });
 
+    var viewsStream = gulp.src([paths.html.files], {base: './www'})
+        .pipe($.htmlmin({collapseWhitespace: true}))
+        .pipe($.templateCache({
+            module: 'myapp',
+            standalone: false,
+            base: function(file) {
+                return file.relative.replace(/\\/g, '/');
+            }
+        }))
+        .pipe(gulp.dest('build/temp'));
+
     return gulp.src(paths.html.main)
-        .pipe($.useref({searchPath: ['www']}))
+        .pipe($.inject(viewsStream, {relative: true}))
+        .pipe($.replace(/<!-- (inject:js|endinject) -->/g, ''))
+        .pipe($.useref({
+            searchPath: ['www', 'build/temp']
+        }))
         .pipe(jsFilter)
         .pipe($.ngAnnotate())
         .pipe($.uglify())
@@ -169,7 +192,7 @@ gulp.task('build:src', ['build:html', 'jshint', 'sass'], function () {
         }))
         .pipe(cssFilter.restore)
         .pipe(htmlFilter)
-        .pipe($.htmlmin({collapseWhitespace: true}))
+        //.pipe($.htmlmin({collapseWhitespace: true}))
         .pipe(htmlFilter.restore)
         .pipe(indexHtmlFilter)
         .pipe($.rev())
