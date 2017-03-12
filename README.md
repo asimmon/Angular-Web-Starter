@@ -1,123 +1,120 @@
-# Template d'application web Angular avec Bootstrap SASS
+# Angular startup template with Bootstrap and SASS
 
-## Prérequis
+## Prerequisites
 
-Installer [Node.js LTS 4.4.X](https://nodejs.org).
+Download and install the latest [LTS version of Node.js](https://nodejs.org/en/download/).
 
-Ensuite, installer les packages node suivants de manière globale:
-
-    npm install --global bower gulp-cli
+Note that no global packages are required.
 
 ## Installation du projet
 
-Récupérer le projet sur bitbucket:
+Clone this repository:
 
-    git clone git@bitbucket.org:c2i-outremer/angular-web-base.git
+    git clone git@github.com:asimmon/Angular-Web-Starter.git angularWebStarter
 
-Installer les packages node locaux:
+Then, restore all the Node.js packages:
 
     npm install
     
-Installer les packages bower
-
-    bower install
+Running `npm install` will automatically trigger the installation of client libraries with Bower, such as AngularJS itself.
     
-## Lancer le projet en mode développement
+## Run the project in development mode
 
-Se positionner dans le répertoire racine du projet et lancer la commande:
+All you have to do is to open a terminal, go to the root folder of this project and run:
 
-    gulp
+    npm run start
 
-Cela équivaut à lancer la tâche `gulp serve` (définie comme tâche gulp principale).Cette commande permer de:
+This command will launch the Gulp task `serve`. The `serve` script launch the following steps:
 
-- **Lancer un serveur web**
- - Utilise un serveur local Node.js avec BrowserSync
- - Ouvre le navigateur
- - Surveille les fichiers et écrit dans la console le nom des fichiers modifiés
-- **Fichiers SCSS / CSS**
- - Compiler les fichier SCSS en CSS au moindre changement
- - Ajouter les propriétés CSS de compatibilité (-moz-*, -webkit-*) automatiquement
- - Injecter le fichier CSS compiler dans le navigateur sans rechargement
- - Crée une version CSS combinée et une version combinée et minifiée
-- **Fichiers HTML**
- - Recharge le navigateur au moindre changement
-- **Fichiers JS**
- - Recharge le navigateur au moindre changement
- - Détecte les erreurs et les avertissements
+- **Starts a web server**
+ - Open a local Node.js webserver with BrowserSync on localhost:3000
+ - Watch your HTML, JS and SCSS files
+- **Compile stylesheets**
+ - Transform SCSS files to CSS
+ - Automatically add compatibility CSS properties (-moz-*, -webkit-*)
+ - Inject the changes into your browser in live
+ - Create an unminified and minified version 
+- **Minify HTML**
+ - Reload your browser when HTML files are modified
+- **Handle JS files**
+ - Reload your browser when JS files are modified
+ - Show JS warning and errors in the terminal, if any
 
-## Créer un package de déploiement pour la production
+## Create a distribution package production-ready
 
-Se positionner dans le répertoire racine du projet et lancer la commande:
+Again, from the root folder in a terminal, run the following command:
 
-    gulp build
+    npm run build
 
-Les fichiers sources prêts au déploiement sont publiés dans le dossier `./build/dist`
+The output files will be in the `./build/dist` folder.
 
-Il est possible de tester ce package de déploiement avec `gulp serve:dist`.
+Just as the `start` script, you can test the production-ready package with `npm run start-dist`. 
 
-## Pratiques à appliquer
+## Coding practices
 
-### Injection automatique des dépendances Angular par annotation
+### Automatic Angular dependencies annotation
 
-En cas de minification des fichiers JS, il est recommandé d'annoter les dépendances injectés dans les fonctions Angular (contrôleurs, services, etc.). Exemple:
+When your JS source code is minified, it is recommanded to annotate your Angular dependencies (controllers, services, etc.). Example:
 
-	// bonne pratique
+	// good practice
 	angular.module('myapp').controller('MyCtrl', ['$timeout', function ($timeout) {
-	    // implémentation
+	    // your code
 	}]);
 	
-	// mauvaise pratique
+	// bad practice
 	angular.module('myapp').controller('MyCtrl', function ($timeout) {
-	    // implémentation
+	    // your code
 	});
 
-Après minification, la variable `$timeout` injectée sera renommée. Le préfixage permet de garder le nom des dépendances injectées. Pour faire cela automatiquement à la construction du package de déploiement, il faut ajouter la chaîne `ngInject` au début des fonctions qui utilisent des dépendances:
+After minification, the `$timeout` variable will be renamed. Prefixing the dependencies will ensure that Angular know the name of the injected dependencies. To do that automatically on each packaging, all you have to do is to add `ngInject` after each function declaration which use dependencies:
 
 	angular.module('myapp').controller('MyCtrl', function ($timeout) {
 	    'ngInject';
 
-	    // implémentation
+	    // your code
 	});
 
-### Utilisation de IIFE et 'use strict'
+### IIFE and 'use strict' hint
 
 	(function () {
 	    'use strict';
 
-	    // implémentation
+	    // your code
 	})();
 
-Cette pratique permet de ne pas exposer des variables JS de façon globale et de restreindre leur utilisation dans un scope précis.
+This practice prevent variables to be globally visible from other source code files, and keep then in a specific scope.
 
-L'utilisation du mot-clé use-strict permet d'exécuter le code JS de manière stricte. Exemple, une erreur sera émise au lieu d'un avertissement si une variable qui n'existe pas est utilisée.
+The keyword `use-script` enable script execution mode of JavaScript. For exemple, an error will be triggered if an undeclared variable is used.
 
 ## Gulp
 
-Gulp est un "automatiseur de tâches". On y définit plusieurs tâches (minification, surveillance de fichier pour déclencher des actions spécifiques...). Les tâches peuvent être dépendantes d'autres tâches (ordre d'exécution).
+Gulp is a task runner. You define many tasks (minifying, watching files to trigger specific actions, etc.). These tasks can be executed after other tasks, or be chained with a specific execution order.
 
-Ce projet utilise Gulp et plusieurs autres plugin Gulp:
+This project use Gulp and some Gulp plugins:
 
--  **gulp-autoprefixer**: Ajoute les propriétés CSS spécifiques pour certains navigateurs (-moz-*, -o-*, -webkit-*, etc.)
--  **gulp-sass**: Compilation de fichiers SCSS
--  **gulp-clean-css**: Minification CSS
--  **gulp-uglify**: Minification Javascript
--  **gulp-htmlmin**: Minification HTML
--  **gulp-jshint**: Affichage de warnings et erreurs Javascript
--  **gulp-rename**: Renommage de fichiers
--  **gulp-ng-annotate**: Annotations des dépendances Angular automatiques
--  **gulp-filter**: Restreint un stream Node (flux de plusieurs fichiers) à un type de fichiers, ce qui permet de travailler sur ces fichiers puis de restaurer le flux à son état initial
--  **gulp-useref**: Permet le traitement de fichiers référencés dans l'HTML via des commentaires <!-- build etc.
--  **gulp-load-plugins**: Lazy loading des plugins Gulp (gulp-*)
+-  **gulp-autoprefixer**: Automatically add compatiblity rules (-moz-*, -o-*, -webkit-*, etc.)
+-  **gulp-sass**: Compile SCSS to CSS
+-  **gulp-clean-css**: Minify CSS
+-  **gulp-uglify**: Minify JavaScript
+-  **gulp-htmlmin**: Minify HTML
+-  **gulp-jshint**: Show JavaScript warning and errors
+-  **gulp-rename**: Rename files
+-  **gulp-ng-annotate**: Insert Angular dependencies annotations
+-  **gulp-filter**: Filters a Node.js stream of files up to a specific file type, which allows you to work on these files, then put back the modified files in the stream
+-  **gulp-useref**: Concatenate files referenced in HTML files, and allows you to modify then before
+-  **gulp-load-plugins**: Lazy loading of Gulp plugin (gulp-*)
+-  **gulp-angular-templatecache**: Concatenate HTML templates to an Angular JavaScript file
+-  **gulp-inject**: Insert references of JS or CSS files in HTML with <script> or <link> tags. 
 
-D'autres plugins Nodes.js sont utilisés par Gulp:
+Some Node.js plugins are used too:
 
-- **rimraf**: suppression de fichiers et dossiers (rm)
-- **run-sequence**: permet de lancer plusieurs tâches successivements
-- **browser-sync**: Serveur local node.js avec surveillance de fichiers (injection ou rechargement du navigateur)
-- **jshint**: utilisé par gulp-jshint
+- **rimraf**: Delete folders and files (rm)
+- **run-sequence**: Allows multiple tasks to be executed sequentially
+- **browser-sync**: Local web server with file watching and browser asset injection/reload
+- **jshint**: used by gulp-jshint
 
-## Liens
+## Related links
 
-- Coding styles pour Angular : [https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md)
+- Angular coding styles : [https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md)
 
-- Tutoriel Gulp : [https://www.smashingmagazine.com/2014/06/building-with-gulp/](https://www.smashingmagazine.com/2014/06/building-with-gulp/)
+- Gulp tutorial : [https://www.smashingmagazine.com/2014/06/building-with-gulp/](https://www.smashingmagazine.com/2014/06/building-with-gulp/)
