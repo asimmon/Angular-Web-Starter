@@ -84,7 +84,7 @@ After minification, the `$timeout` variable will be renamed. Prefixing the depen
 
 This practice prevent variables to be globally visible from other source code files, and keep then in a specific scope.
 
-The keyword `use-script` enable script execution mode of JavaScript. For exemple, an error will be triggered if an undeclared variable is used.
+The keyword `use strict` enable script execution mode of JavaScript. For exemple, an error will be triggered if an undeclared variable is used.
 
 ## Gulp
 
